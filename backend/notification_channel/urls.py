@@ -9,5 +9,4 @@ urlpatterns = [
     path("update/<int:pk>/",views.NotificationUpdateAPIView.as_view()),
     path("delete/<int:pk>/",views.NotificationDestroyAPIView.as_view()),
     path("test/",views.NotificationTestAPIView.as_view()),
-    
 ]

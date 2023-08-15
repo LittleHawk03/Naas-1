@@ -3,3 +3,5 @@ djangorestframework
 PyYAML
 requests
 django-cors-headers
+PyJWT
+deprecation==2.1.0

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'notification_channel',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -123,4 +124,35 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+
+def verified(user):
+    user.active = True
+    
+    
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_VERIFIED_CALLBACK = verified
+
+EMAIL_FROM_ADDRESS = 'goldf55f@gmail.com'
+
+EMAIL_MAIL_SUBJECT = 'Confirm your email {{ user.username }}'
+EMAIL_MAIL_HTML = 'mail.html'
+EMAIL_MAIL_PLAIN = 'plainmail.txt'
+
+EMAIL_MAIL_PAGE_TEMPLATE = 'confirm.html'
+
+
+
+# cbpamuevasnbbnrb
+EMAIL_PASSWORD = 'cbpamuevasnbbnrb'
+EMAIL_MAIL_TOKEN_LIFE = 60 * 60
+
+EMAIL_PAGE_DOMAIN = 'https://0.0.0.0/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'goldf55f@gmail.com'
+EMAIL_HOST_PASSWORD = 'cbpamuevasnbbnrb'  # os.environ['password_key'] suggested
+EMAIL_USE_TLS = True
