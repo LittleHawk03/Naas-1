@@ -29,6 +29,11 @@ def send_email(user, thread=True, expiry=None):
     print("step-0")
     send_inner(user, thread, expiry, 'MAIL')
 
+def send_email(user, thread=True, expiry=None):
+    print("step-0")
+    send_inner(user, thread, expiry, 'CHANNEL')
+    
+    
 def send_inner(user, thread, expiry, kind):
     try:
         user.save()
@@ -63,57 +68,7 @@ def send_inner(user, thread, expiry, kind):
         raise e
     except Exception as e:
         logger.info(repr(e))
-
-
-def send_email_thread(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
-    domain += '/' if not domain.endswith('/') else ''
-
-    def has_decorator(k):
-        if callable(k):
-            return k.__dict__.get(f'django_email_verification_{kind.lower()}_view_id', True)
-        return False
-    print(  )
-    d = [v[0][0] for k, v in get_resolver(None).reverse_dict.items() if has_decorator(k)]
-    w = [a[0] for a in d if a[1] == []]
-    d = [a[0][:a[0].index('%')] for a in d if a[1] != []]
-
-    if len(w) > 0:
-        logger.warning(f'{DJANGO_EMAIL_VERIFICATION_NO_PARAMETER_WARNING}: {w}')
-
-    if len(d) > 1:
-        logger.error(f'{DJANGO_EMAIL_VERIFICATION_MORE_VIEWS_ERROR}: {d}')
-        return
-
-    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
-
-    if len(d) < 1:
-        print("FUCK ZIT DONt WORk")
-        logger.info(DJANGO_EMAIL_VERIFICATION_NO_VIEWS_INFO)
-    else:
-        context['link'] = domain + token
-    
-    # print("domain" + domain)
-    # print("token" + token)
-    print(context['link'])
-   
-    subject = Template(subject).render(Context(context))
-
-    text = render_to_string(mail_plain, context)
-
-    html = render_to_string(mail_html, context)
-    
-    print(user.email)
-    
-    msg = EmailMultiAlternatives(subject, text, settings.EMAIL_HOST_USER, [user.email])
-    
-    # if settings.DEBUG:
-    #     msg.extra_headers['LINK'] = context['link']
-    #     msg.extra_headers['TOKEN'] = token
-
-    msg.attach_alternative(html, 'text/html')
-    msg.send()
-    print("step2-done")
-    
+ 
 
 def send_email_thread_2(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
     domain += '/' if not domain.endswith('/') else ''

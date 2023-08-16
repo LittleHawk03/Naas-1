@@ -152,19 +152,19 @@ EMAIL_MAIL_PAGE_TEMPLATE = 'confirm.html'
 
 #this is for actice channel
 
-# EMAIL_CHANNEL_SUBJECT = 'Confirm your notification channel {{ channel.name }}'
-# EMAIL_CHANNEL_HTML = 'mail_channel.html'
-# EMAIL_CHANNEL_PLAIN = 'plainmail.txt'
-# EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
+EMAIL_CHANNEL_SUBJECT = 'Confirm your notification channel {{ channel.name }}'
+EMAIL_CHANNEL_HTML = 'mail_channel.html'
+EMAIL_CHANNEL_PLAIN = 'plainmail.txt'
+EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 
 
 # cbpamuevasnbbnrb
 # EMAIL_PASSWORD = 'mngijizoxlwdatfw'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60
-# EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
+EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
 
 EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/email/'
-# CHANNEL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/channel/'
+CHANNEL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/channel/'
 
 
 
