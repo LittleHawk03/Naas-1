@@ -22,6 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-)86!&+v6+yd!6sq5z2x=22(zbxq-4-81634x%yxph8(zz*#9nb'
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'goldf55f@gmail.com'
+EMAIL_HOST_PASSWORD = 'mngijizoxlwdatfw'  # os.environ['password_key'] suggested
+EMAIL_USE_TLS = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -136,23 +143,71 @@ EMAIL_VERIFIED_CALLBACK = verified
 
 EMAIL_FROM_ADDRESS = 'goldf55f@gmail.com'
 
+# this is for the active user
 EMAIL_MAIL_SUBJECT = 'Confirm your email {{ user.username }}'
 EMAIL_MAIL_HTML = 'mail.html'
 EMAIL_MAIL_PLAIN = 'plainmail.txt'
-
+EMAIL_MAIL_PAGE = 'confirm.html'
 EMAIL_MAIL_PAGE_TEMPLATE = 'confirm.html'
 
+#this is for actice channel
+
+# EMAIL_CHANNEL_SUBJECT = 'Confirm your notification channel {{ channel.name }}'
+# EMAIL_CHANNEL_HTML = 'mail_channel.html'
+# EMAIL_CHANNEL_PLAIN = 'plainmail.txt'
+# EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 
 
 # cbpamuevasnbbnrb
-EMAIL_PASSWORD = 'cbpamuevasnbbnrb'
+# EMAIL_PASSWORD = 'mngijizoxlwdatfw'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60
+# EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
 
-EMAIL_PAGE_DOMAIN = 'https://0.0.0.0/'
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/email/'
+# CHANNEL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/channel/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'goldf55f@gmail.com'
-EMAIL_HOST_PASSWORD = 'cbpamuevasnbbnrb'  # os.environ['password_key'] suggested
-EMAIL_USE_TLS = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'goldf55f@gmail.com'
+# EMAIL_HOST_PASSWORD = 'mngijizoxlwdatfw'  # os.environ['password_key'] suggested
+# EMAIL_USE_TLS = True

@@ -39,6 +39,7 @@ class EmailVerificationTokenGeneral():
             
             for k , v in kwargs.items():
                 if payload[k]  != v:
+                    print("1.1.1.---1.1.1.1")
                     return False, None
         
             if hasattr(settings, 'EMAIL_MULTI_USER') and settings.EMAIL_MULTI_USER:
@@ -47,11 +48,16 @@ class EmailVerificationTokenGeneral():
                 obj = [Users.objects.get(email=email)]
         
         except (ValueError, get_user_model().DoesNotExist, jwt.DecodeError, jwt.ExpiredSignatureError, jwt.ExpiredSignatureError):
+            print("2.2.2.2---1.1.1.1")
             return False, None        
         
         # except (ValueError, get_user_model().DoesNotExist, jwt.DecodeError):
-        if not len(obj) or obj['0'] is None:
+        if not len(obj) or obj[0] is None:
+            print("3.3.3.---1.1.1.1")
             return False, None
+        
+        print("4.4.4.---1.1.1.1")
+        return True, obj[0]
         
     @staticmethod
     def now():

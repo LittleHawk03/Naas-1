@@ -14,7 +14,7 @@ class Users(models.Model):
     
     name = models.CharField(max_length=100)
     username = models.CharField(max_length=30,unique=True,null=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     gender = models.CharField(max_length=15,choices=GenderChoice.choices,default=GenderChoice.MALE)
     location = models.CharField(max_length=100,blank=True)
     date_of_birth = models.DateField()

@@ -5,21 +5,25 @@ from typing import Callable
 
 import deprecation
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail, BadHeaderError
 from django.template import Template, Context
 from django.template.loader import render_to_string
 from django.urls import get_resolver
 from django.utils import timezone
 
-import deprecation
-
 from .errors import InvalidUserModel, NotAllFieldCompiled
 from .token import default_token_generator
+
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 logger = logging.getLogger('django_email_verification')
 DJANGO_EMAIL_VERIFICATION_MORE_VIEWS_ERROR = 'ERROR: more than one verify view found'
 DJANGO_EMAIL_VERIFICATION_NO_VIEWS_INFO = 'INFO: no verify view found'
 DJANGO_EMAIL_VERIFICATION_NO_PARAMETER_WARNING = 'WARNING: found verify view without parameter'
+
+
+# func.django_email_verification_mail_view_id = True
 
 def send_email(user, thread=True, expiry=None):
     print("step-0")
@@ -47,11 +51,11 @@ def send_inner(user, thread, expiry, kind):
         
         args = (user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html)
         if thread:
-            t = Thread(target=send_email_thread, args=args)
+            t = Thread(target=send_email_thread_2, args=args)
             t.start()
         else:
             print("step1-done")
-            send_email_thread(*args)
+            send_email_thread_2(*args)
             
     # except AttributeError:
     #     raise InvalidUserModel('The user model you provided is invalid')
@@ -66,9 +70,9 @@ def send_email_thread(user, kind, token, expiry, sender, domain, subject, mail_p
 
     def has_decorator(k):
         if callable(k):
-            return k.__dict__.get(f'django_email_verification_{kind.lower()}_view_id', False)
+            return k.__dict__.get(f'django_email_verification_{kind.lower()}_view_id', True)
         return False
-
+    print(  )
     d = [v[0][0] for k, v in get_resolver(None).reverse_dict.items() if has_decorator(k)]
     w = [a[0] for a in d if a[1] == []]
     d = [a[0][:a[0].index('%')] for a in d if a[1] != []]
@@ -83,9 +87,10 @@ def send_email_thread(user, kind, token, expiry, sender, domain, subject, mail_p
     context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
 
     if len(d) < 1:
+        print("FUCK ZIT DONt WORk")
         logger.info(DJANGO_EMAIL_VERIFICATION_NO_VIEWS_INFO)
     else:
-        context['link'] = domain + d[0] + token
+        context['link'] = domain + token
     
     # print("domain" + domain)
     # print("token" + token)
@@ -99,16 +104,74 @@ def send_email_thread(user, kind, token, expiry, sender, domain, subject, mail_p
     
     print(user.email)
     
-    msg = EmailMultiAlternatives(subject, text, sender, [user.email])
+    msg = EmailMultiAlternatives(subject, text, settings.EMAIL_HOST_USER, [user.email])
     
-    if settings.DEBUG:
-        msg.extra_headers['LINK'] = context['link']
-        msg.extra_headers['TOKEN'] = token
+    # if settings.DEBUG:
+    #     msg.extra_headers['LINK'] = context['link']
+    #     msg.extra_headers['TOKEN'] = token
 
     msg.attach_alternative(html, 'text/html')
     msg.send()
     print("step2-done")
     
+
+def send_email_thread_2(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
+    domain += '/' if not domain.endswith('/') else ''
+
+
+    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
+
+   
+    context['link'] = domain + token
+    
+ 
+    print(context['link'])
+   
+    subject = Template(subject).render(Context(context))
+
+    text = render_to_string(mail_plain, context)
+
+    html = render_to_string(mail_html, context)
+    
+    print(user.email)
+    
+    msg = EmailMultiAlternatives(subject, text, sender, [user.email])
+
+    msg.attach_alternative(html, 'text/html')
+    msg.send()
+    print("step2-done")
+
+
+def send_email_thread_3(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
+    domain += '/' if not domain.endswith('/') else ''
+
+
+    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
+
+   
+    context['link'] = domain + token
+    
+ 
+    print(context['link'])
+   
+    subject = Template(subject).render(Context(context))
+
+    text = render_to_string(mail_plain, context)
+
+    html = render_to_string(mail_html, context)
+    
+    print(user.email)
+    
+    
+    try:
+            send_mail(subject, text, sender, [user.email])
+    except BadHeaderError:
+            return HttpResponse("Invalid header found.")
+    # msg = EmailMultiAlternatives(subject, text, sender, [user.email])
+
+    # msg.attach_alternative(html, 'text/html')
+    # msg.send()
+    print("step2-done")
 
 
 def _get_validated_field(field, fallback=None, default_type=None):
@@ -147,6 +210,16 @@ def verify_token(token):
 
 
 def verify_email_view(func):
+    func.django_email_verification_mail_view_id = True
+
+    @functools.wraps(func)
+    def verify_function_wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return verify_function_wrapper
+
+@deprecation.deprecated(deprecated_in='0.3.0', details='use either verify_email_view() or verify_password_view()')
+def verify_view(func):
     func.django_email_verification_mail_view_id = True
 
     @functools.wraps(func)
