@@ -32,7 +32,7 @@ EMAIL_USE_TLS = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','116.103.226.93','*']
 
 
 # Application definition
@@ -133,18 +133,23 @@ STATIC_URL = 'static/'
 
 
 def verified(user):
+    print("step-change-1")
     user.active = True
     
-    
+def verified_channel(channel):
+    print("step-change-2")
+    channel.isSubscribed = True
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_VERIFIED_CALLBACK = verified
+CHANNEL_VERIFIED_CALLBACK= verified_channel
 
 EMAIL_FROM_ADDRESS = 'goldf55f@gmail.com'
 
 # this is for the active user
-EMAIL_MAIL_SUBJECT = 'Confirm your email {{ user.username }}'
+EMAIL_MAIL_SUBJECT = 'VIETTEL CLOUD - Confirm your email {{ user.username }}'
 EMAIL_MAIL_HTML = 'mail.html'
 EMAIL_MAIL_PLAIN = 'plainmail.txt'
 EMAIL_MAIL_PAGE = 'confirm.html'
@@ -152,7 +157,7 @@ EMAIL_MAIL_PAGE_TEMPLATE = 'confirm.html'
 
 #this is for actice channel
 
-EMAIL_CHANNEL_SUBJECT = 'Confirm your notification channel {{ channel.name }}'
+EMAIL_CHANNEL_SUBJECT = 'VIETTEL CLOUD NAAS - Confirm your notification channel {{ channel.name }}'
 EMAIL_CHANNEL_HTML = 'mail_channel.html'
 EMAIL_CHANNEL_PLAIN = 'plainmail.txt'
 EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
@@ -163,8 +168,8 @@ EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60
 EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
 
-EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/email/'
-CHANNEL_PAGE_DOMAIN = 'http://127.0.0.1:8000/api/comfirm/channel/'
+EMAIL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/email/'
+CHANNEL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/channel/'
 
 
 

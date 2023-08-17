@@ -10,7 +10,7 @@ class UserPublicSerializers(serializers.Serializer):
 
 class NotificationChannelSerializer(serializers.ModelSerializer):
    
-    receiver_field = serializers.CharField(write_only=True)
+    # receiver_field = serializers.CharField(write_only=True)
     
     class Meta:
         model = NotificationChannel
@@ -28,7 +28,7 @@ class NotificationChannelSerializer(serializers.ModelSerializer):
 
 class NotificationCreateSerializer(serializers.ModelSerializer):
    
-    receiver_field = serializers.CharField(write_only=True)
+    # receiver_field = serializers.CharField(write_only=True)
     
     class Meta:
         model = NotificationChannel
@@ -46,7 +46,7 @@ class NotificationCreateSerializer(serializers.ModelSerializer):
 
 class NotificationChannelListSerializer(serializers.ModelSerializer):
     # user = UserSerializer(source='Users',read_only=True)
-    receiver_field = serializers.CharField(write_only=True)
+    # receiver_field = serializers.CharField(write_only=True)
     owner = UserPublicSerializers(source='user',read_only=True)
     # notification_channel = NotificationChannelSerializer(many=True)
    
@@ -54,6 +54,7 @@ class NotificationChannelListSerializer(serializers.ModelSerializer):
         model = NotificationChannel
         # fields = '__all__' 
         fields = [
+            "id",
             "name",
             "unique_name",
             "notification_type",

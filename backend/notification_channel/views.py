@@ -5,6 +5,7 @@ from rest_framework import generics
 from .models import NotificationChannel
 from .serializers import NotificationChannelSerializer, NotificationChannelListSerializer, NotificationPublicSerializer
 from .serializers import NotificationCreateSerializer
+from api.channel_confirm import send_channel
 
 
 class NotificationCreatAPIView(generics.CreateAPIView):
@@ -12,7 +13,11 @@ class NotificationCreatAPIView(generics.CreateAPIView):
     serializer_class = NotificationChannelSerializer
     
     def perform_create(self, serializer):
-        serializer.save()
+        instance = serializer.save()
+        if instance.notification_type == 'email':
+            channel_vertifi = NotificationChannel.objects.get(id=instance.id)
+            send_channel(channel_vertifi)
+            
         return super().perform_create(serializer)
     
 

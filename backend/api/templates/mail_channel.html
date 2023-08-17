@@ -1,2 +1,6 @@
-<h1>You are almost there, {{ user.username }}! {{ expiry|time:"TIME_FORMAT" }}</h1><br>
-<h2>Click <a href="{{ link }}">here</a> to verify your email</h2>
+<h3>Welcome to Viettel Cloud,<br> You have create a notification channel in Viettel Cloud is : 
+    {{ channel.name }}!<br> at {{ expiry|time:"TIME_FORMAT" }}</h3><br>
+<h3>To confirm this channel, click or visit the link 
+    <a href="{{ link }}"> here </a> to verify your email</h3>
+
+<h5>Please do not reply directly to this email. If you wish to remove yourself, make it on your way</h5>

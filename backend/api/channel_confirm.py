@@ -25,31 +25,31 @@ DJANGO_EMAIL_VERIFICATION_NO_PARAMETER_WARNING = 'WARNING: found verify view wit
 
 # func.django_email_verification_mail_view_id = True
 
-def send_email(user, thread=True, expiry=None):
+def send_channel(channel, thread=True, expiry=None):
     print("step-0")
-    send_inner(user, thread, expiry, 'MAIL')
+    send_inner(channel, thread, expiry, 'CHANNEL')
 
-def send_inner(user, thread, expiry, kind):
+def send_inner(channel, thread, expiry, kind):
     try:
-        user.save()
+        channel.save()
 
         exp = expiry if expiry is not None else _get_validated_field(f'EMAIL_MAIL_TOKEN_LIFE', 'EMAIL_TOKEN_LIFE',
                                                                      default_type=int) + default_token_generator.now()
-        token, expiry = default_token_generator.gen_token(user, exp, kind=kind)
+        token, expiry = default_token_generator.gen_token(channel, exp, kind=kind)
         
         print("___________________________----------------------_____________________")
         
-        print(user.email)
+        print(channel.receiver_field)
         
         sender = _get_validated_field('EMAIL_FROM_ADDRESS')
-        domain = _get_validated_field('EMAIL_PAGE_DOMAIN')
-        subject = _get_validated_field(f'EMAIL_MAIL_SUBJECT')
-        mail_plain = _get_validated_field(f'EMAIL_MAIL_PLAIN')
-        mail_html = _get_validated_field(f'EMAIL_MAIL_HTML')
+        domain = _get_validated_field('CHANNEL_PAGE_DOMAIN')
+        subject = _get_validated_field(f'EMAIL_CHANNEL_SUBJECT')
+        mail_plain = _get_validated_field(f'EMAIL_CHANNEL_PLAIN')
+        mail_html = _get_validated_field(f'EMAIL_CHANNEL_HTML')
 
-        print(user.email)
+        print(channel.receiver_field)
         
-        args = (user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html)
+        args = (channel, kind, token, expiry, sender, domain, subject, mail_plain, mail_html)
         if thread:
             t = Thread(target=send_email_thread_2, args=args)
             t.start()
@@ -58,7 +58,7 @@ def send_inner(user, thread, expiry, kind):
             send_email_thread_2(*args)
             
     # except AttributeError:
-    #     raise InvalidUserModel('The user model you provided is invalid')
+    #     raise InvalidchannelModel('The user model you provided is invalid')
     except NotAllFieldCompiled as e:
         raise e
     except Exception as e:
@@ -66,11 +66,11 @@ def send_inner(user, thread, expiry, kind):
 
  
 
-def send_email_thread_2(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
+def send_email_thread_2(channel, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
     domain += '/' if not domain.endswith('/') else ''
 
 
-    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
+    context = {'token': token, 'expiry': expiry, 'channel': channel,'link': domain + token}
 
    
     context['link'] = domain + token
@@ -84,44 +84,12 @@ def send_email_thread_2(user, kind, token, expiry, sender, domain, subject, mail
 
     html = render_to_string(mail_html, context)
     
-    print(user.email)
+    print(channel.receiver_field)
     
-    msg = EmailMultiAlternatives(subject, text, sender, [user.email])
+    msg = EmailMultiAlternatives(subject, text, sender, [channel.receiver_field])
 
     msg.attach_alternative(html, 'text/html')
     msg.send()
-    print("step2-done")
-
-
-def send_email_thread_3(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
-    domain += '/' if not domain.endswith('/') else ''
-
-
-    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
-
-   
-    context['link'] = domain + token
-    
- 
-    print(context['link'])
-   
-    subject = Template(subject).render(Context(context))
-
-    text = render_to_string(mail_plain, context)
-
-    html = render_to_string(mail_html, context)
-    
-    print(user.email)
-    
-    
-    try:
-            send_mail(subject, text, sender, [user.email])
-    except BadHeaderError:
-            return HttpResponse("Invalid header found.")
-    # msg = EmailMultiAlternatives(subject, text, sender, [user.email])
-
-    # msg.attach_alternative(html, 'text/html')
-    # msg.send()
     print("step2-done")
 
 
@@ -140,28 +108,30 @@ def _get_validated_field(field, fallback=None, default_type=None):
         raise NotAllFieldCompiled(f"Field {field} missing or invalid")
     
 
-def verify_email(token):
-    valid, user = default_token_generator.check_token(token, kind='MAIL')
+def verify_email_channel(token):
+    valid, channel = default_token_generator.check_token(token, kind='CHANNEL')
+    # print(channel)
     if valid:
-        callback = _get_validated_field('EMAIL_VERIFIED_CALLBACK', default_type=Callable)
-        if hasattr(user, callback.__name__):
-            getattr(user, callback.__name__)()
+        callback = _get_validated_field('CHANNEL_VERIFIED_CALLBACK', default_type=Callable)
+        if hasattr(channel, callback.__name__):
+            getattr(channel, callback.__name__)()
         else:
-            callback(user)
-        print("Chnage-done")
-        user.last_login = timezone.now()
-        user.save()
-        
-        return valid, user
+            callback(channel)
+        channel.last_login = timezone.now()
+        # channel.isSubscribed = True
+        print("step-save-done")
+        channel.save()
+       
+        return valid, channel
     return False, None
 
 
 @deprecation.deprecated(deprecated_in='0.3.0', details='use either verify_email() or verify_password()')
 def verify_token(token):
-    return verify_email(token)
+    return verify_email_channel(token)
 
 
-def verify_email_view(func):
+def verify_email_view_channel(func):
     func.django_email_verification_mail_view_id = True
 
     @functools.wraps(func)
@@ -171,7 +141,7 @@ def verify_email_view(func):
     return verify_function_wrapper
 
 @deprecation.deprecated(deprecated_in='0.3.0', details='use either verify_email_view() or verify_password_view()')
-def verify_view(func):
+def verify_view_channel(func):
     func.django_email_verification_mail_view_id = True
 
     @functools.wraps(func)

@@ -1,0 +1,3 @@
+Welcome to Viettel NAAS, You have create a notification channel in Viettel Cloud is : {{ channel.name }}! at {{ expiry|time:"TIME_FORMAT" }}
+To confirm this channel, click or visit the link to verify your email:
+{{ link }}

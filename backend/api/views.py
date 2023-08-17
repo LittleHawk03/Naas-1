@@ -3,6 +3,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render
 
 from .confirm import verify_email_view, verify_email
+from .channel_confirm import verify_email_view_channel,verify_email_channel
 # , verify_password_view, verify_password
 from .errors import NotAllFieldCompiled
 
@@ -20,13 +21,15 @@ def verify(request: WSGIRequest, token):
 verify_email_confirm = verify
 
 
-# @verify_password_view
-# def verify_password_page(request: WSGIRequest, token):
-#     try:
-#         if request.method == 'POST' and (pwd := request.POST.get('password')) is not None:
-#             success, user = verify_password(token, pwd)
-#             return render(request, settings.EMAIL_PASSWORD_CHANGED_PAGE_TEMPLATE,
-#                           {'success': success, 'user': user, 'request': request})
-#         return render(request, settings.EMAIL_PASSWORD_PAGE_TEMPLATE, {'token': token})
-#     except (AttributeError, TypeError):
-#         raise NotAllFieldCompiled('EMAIL_PASSWORD templates field not found')
+@verify_email_view_channel
+def verify_channel(request: WSGIRequest, token):
+    try:
+        template = settings.EMAIL_MAIL_PAGE
+        print("0.0.0.0")
+        success, channel = verify_email_channel(token)
+        print(channel.receiver_field)
+        return render(request, template, {'success': success, 'user': channel, 'request': request})
+    except (AttributeError, TypeError):
+        raise NotAllFieldCompiled('EMAIL_MAIL_PAGE_TEMPLATE field not found')
+    
+verify_channel_confirm = verify_channel
