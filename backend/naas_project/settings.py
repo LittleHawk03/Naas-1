@@ -159,7 +159,7 @@ EMAIL_MAIL_PAGE_TEMPLATE = 'confirm.html'
 
 EMAIL_CHANNEL_SUBJECT = 'VIETTEL CLOUD NAAS - Confirm your notification channel {{ channel.name }}'
 EMAIL_CHANNEL_HTML = 'mail_channel.html'
-EMAIL_CHANNEL_PLAIN = 'plainmail.txt'
+EMAIL_CHANNEL_PLAIN = 'plainmail_channel.txt'
 EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 
 

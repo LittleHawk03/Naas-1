@@ -52,7 +52,6 @@ class NotificationChannelListSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = NotificationChannel
-        # fields = '__all__' 
         fields = [
             "id",
             "name",
@@ -61,7 +60,6 @@ class NotificationChannelListSerializer(serializers.ModelSerializer):
             "receiver_field",
             "slack_channel",
             "isSubscribed",
-            # "user",
             "owner",
         ]
 

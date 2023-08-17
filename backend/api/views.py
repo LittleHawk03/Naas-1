@@ -24,7 +24,7 @@ verify_email_confirm = verify
 @verify_email_view_channel
 def verify_channel(request: WSGIRequest, token):
     try:
-        template = settings.EMAIL_MAIL_PAGE
+        template = settings.EMAIL_CHANNEL_PAGE
         print("0.0.0.0")
         success, channel = verify_email_channel(token)
         print(channel.receiver_field)

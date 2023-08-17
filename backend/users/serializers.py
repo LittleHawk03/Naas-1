@@ -12,11 +12,7 @@ from notification_channel.models import NotificationChannel
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
     # id = serializers.IntegerField(read_only=True)
-    # notification_channel = serializers.SerializerMethodField(read_only=True)
-    # notifi = NotificationChannelSerializer(read_only=True)
     notification_channel = NotifcationTest(many=True, read_only=True)
-    # print(id)
-    # notification_channel = TestSericalizer(read_only=True)
     # print(notification_channel)
     class Meta:
         model = Users

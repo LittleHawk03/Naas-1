@@ -93,5 +93,7 @@ venv/
 */*/*/*.swp
 
 # database file
-
+assets
 backend/db.sqlite3
+README.md
+readme-issue.md
