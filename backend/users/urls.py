@@ -1,11 +1,15 @@
-from django.urls import path
-
+from django.urls import path,include
+from rest_framework import routers
 from . import views
 
+router = routers.DefaultRouter()
+router.register(r'create', views.UserCreateApiView,basename='UserCreateApiView')
+router.register(r'retrieve', views.UserRetrieveApiView,basename='UserRetrieveApiView')
+router.register(r'lists', views.UsersListApiView,basename='UsersListApiView')
+router.register(r'destroy', views.UserDestroyApiView,basename='UserDestroyApiView')
+router.register(r'update', views.UserUpdateApiView, basename='UserUpdateApiView')
+
+
 urlpatterns = [
-    path("", views.UserCreatAPIView.as_view()),
-    path("lists/", views.UserListCreatedAPIView.as_view()),
-    path("<int:pk>/", views.UserDetailAPIView.as_view()),
-    path("update/<int:pk>/",views.UserUpdateAPIView.as_view()),
-    path("delete/<int:pk>/",views.UserDestroyAPIView.as_view())
+    path("",include(router.urls)),
 ]

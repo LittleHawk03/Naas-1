@@ -1,95 +1,46 @@
 from rest_framework import serializers
 
-from .models import NotificationChannel
+from .models import NotificationChannel, EmailNotificationChannel, WebhookNotificationChannel, SlackNotificationChannel, SMSNotificatonChannel 
 
-
-class UserPublicSerializers(serializers.Serializer):
-    id = serializers.CharField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    email = serializers.CharField(read_only=True)
 
 class NotificationChannelSerializer(serializers.ModelSerializer):
-   
-    # receiver_field = serializers.CharField(write_only=True)
+
     
     class Meta:
         model = NotificationChannel
-        # fields = '__all__' 
         fields = [
-            "name",
-            "unique_name",
-            "notification_type",
-            "receiver_field",
-            "slack_channel",
-            "isSubscribed",
-            "user",
-            # "owner",
+            "name","notification_type","isSubscribed",
         ]
 
-class NotificationCreateSerializer(serializers.ModelSerializer):
-   
-    # receiver_field = serializers.CharField(write_only=True)
+
+    
+class EmailNotificationChannelSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = NotificationChannel
-        # fields = '__all__' 
-        fields = [
-            "name",
-            "unique_name",
-            "notification_type",
-            "receiver_field",
-            "slack_channel",
-            "isSubscribed",
-            "user",
-            # "owner",
-        ]
-
-class NotificationChannelListSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(source='Users',read_only=True)
-    # receiver_field = serializers.CharField(write_only=True)
-    owner = UserPublicSerializers(source='user',read_only=True)
-    # notification_channel = NotificationChannelSerializer(many=True)
-   
-    class Meta:
-        model = NotificationChannel
-        fields = [
-            "id",
-            "name",
-            "unique_name",
-            "notification_type",
-            "receiver_field",
-            "slack_channel",
-            "isSubscribed",
-            "owner",
-        ]
-
-
-
-
-class NotificationInlineSericalizer(serializers.Serializer):
-    id = serializers.CharField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    unique_name = serializers.CharField(read_only=True)
-    # user = serializers.IntegerField(read_only=True)
-    
-
-
-class NotificationPublicSerializer(serializers.Serializer):
-
-    user_notification = serializers.SerializerMethodField(read_only=True)
-
-
-    def get_user_notification(self, obj):
-        # print(obj.id)
-        user_id = obj.user.id
-        # print(user_id)
-        notification = NotificationChannel.objects.filter(id=user_id)
-        # notification = NotificationChannel.objects.all()
-        # print(notification)
-        return NotificationInlineSericalizer(notification, many=True).data
-        # return []
+        model = EmailNotificationChannel
+        fields = ["id","name","notification_type","isSubscribed","email_field","user"]
         
         
+class WebhookNotificationChannelSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = WebhookNotificationChannel
+        fields = ["id","name","notification_type","isSubscribed","webhook_url","user"]
+
+class SMSNotificationChannelSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = SMSNotificatonChannel 
+        fields = ["id","name","notification_type","isSubscribed","sms_field","user"]
+        
+        
+class SlackNotificationChannelSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = SlackNotificationChannel
+        fields = ["id","name","notification_type","isSubscribed","incoming_webhook","slack_channel","user"]
+
+
 class NotifcationTest(serializers.ModelSerializer):
     class Meta:
         model = NotificationChannel

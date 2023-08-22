@@ -14,17 +14,7 @@ class EmailVerificationTokenGeneral():
     secret = settings.SECRET_KEY
 
     def gen_token(self, obj, expiry,kind, **kwargs):
-        '''
-            Args:
-            obj (Model): the obj
-            expiry (datetime | int): optional forced expiry date
-            kwargs: extra payload for the token
 
-            Returns:
-                 (tuple): tuple containing:
-                    token (str): the token
-                    expiry (datetime): the expiry datetime
-        '''
         exp = int(expiry.timestamp()) if isinstance(expiry, datetime) else expiry
         if kind == 'MAIL':
             payload = {'email' : obj.email, 'exp': exp}
@@ -36,15 +26,11 @@ class EmailVerificationTokenGeneral():
         
     
     def check_token(self, token, kind ,**kwargs):
-        '''
-        '''
         try:
             payload = jwt.decode(token, self.secret, algorithms='HS256')
             email, exp = payload['email'], payload['exp']
-            
             for k , v in kwargs.items():
                 if payload[k]  != v:
-                    print("1.1.1.---1.1.1.1")
                     return False, None
         
             if hasattr(settings, 'EMAIL_MULTI_USER') and settings.EMAIL_MULTI_USER:
@@ -54,23 +40,22 @@ class EmailVerificationTokenGeneral():
                     obj = NotificationChannel.objects.filter(receiver_field=email)
             else:
                 if kind == 'MAIL':
+                    print(email)
                     obj = [Users.objects.get(email=email)]
                 if kind == 'CHANNEL':
                     obj = [NotificationChannel.objects.get(receiver_field=email)]
-
-                
-                # obj = [Users.objects.get(email=email)]
-        
         except (ValueError, get_user_model().DoesNotExist, jwt.DecodeError, jwt.ExpiredSignatureError, jwt.ExpiredSignatureError):
-            print("2.2.2.2---1.1.1.1")
             return False, None        
+        
+        if not len(obj) or obj[0] is None:
+            return False, None
+        
+        return True, obj[0]        
         
         # except (ValueError, get_user_model().DoesNotExist, jwt.DecodeError):
         if not len(obj) or obj[0] is None:
-            print("3.3.3.---1.1.1.1")
             return False, None
-        
-        print("4.4.4.---1.1.1.1")
+
         return True, obj[0]
         
     @staticmethod

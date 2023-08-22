@@ -1,34 +1,27 @@
 from rest_framework import serializers
 
 from .models import Users
-# from notification_channel.serializers import NotificationChannelSerializer
-# from notification_channel.serializers import NotificationChannelListSerializer
-from notification_channel.serializers import NotifcationTest
-from notification_channel.models import NotificationChannel
+from notification_channel.serializers import NotifcationTest, EmailNotificationChannelSerializer, SMSNotificationChannelSerializer, SlackNotificationChannelSerializer, WebhookNotificationChannelSerializer
 
     
 
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
-    # id = serializers.IntegerField(read_only=True)
-    notification_channel = NotifcationTest(many=True, read_only=True)
-    # print(notification_channel)
+    # notification_channels = NotifcationTest(many=True, read_only=True)
+    email_notification_channels = EmailNotificationChannelSerializer(many=True, read_only=True)
+    webhook_notification_channels = WebhookNotificationChannelSerializer(many=True, read_only=True)
+    sms_notification_channels = SMSNotificationChannelSerializer(many=True,read_only=True)
+    slack_notification_channels = SlackNotificationChannelSerializer(many=True,read_only=True)
     class Meta:
         model = Users
-        # fields = '__all__' 
-        fields = [
-            "id",
-            "name",
-            "username",
-            "email",
-            "gender",
-            "location",
-            "date_of_birth",
-            "account_create_date",
-            "active",
-            "notification_channel",
-        ]
+        fields = [ "id","name", "username", "email", "gender", "location", "date_of_birth"
+                  , "account_create_date"
+                  , "active"
+                  , "email_notification_channels",
+                  "webhook_notification_channels",
+                  "sms_notification_channels",
+                  "slack_notification_channels",]
     
 
         

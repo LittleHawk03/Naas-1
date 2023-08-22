@@ -168,8 +168,8 @@ EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60
 EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
 
-EMAIL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/email/'
-CHANNEL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/channel/'
+EMAIL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/email/'
+CHANNEL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/channel/'
 
 
 

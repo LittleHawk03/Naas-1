@@ -1,12 +1,23 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'lists', views.NotificationChannelListView)
+router.register(r'create', views.NotificationChannelCreateView)
+router.register(r'retrieve', views.NotificationChannelRetrieveView)
+router.register(r'destroy', views.NotificationChannelDestroyView)
+
+
+router_update = routers.DefaultRouter()
+router_update.register(r'email', views.NotificationChannelUpdateEmail)
+router_update.register(r'webhook', views.NotificationChannelUpdateWeb)
+router_update.register(r'sms', views.NotificationChannelUpdateSMS)
+router_update.register(r'slack', views.NotificationChannelUpdateSlack)
+
 
 urlpatterns = [
-    path("", views.NotificationCreatAPIView.as_view()),
-    path("lists/", views.NotificationListAllAPIView.as_view()),
-    path("<int:pk>/", views.NotificationDetailAPIView.as_view()),
-    path("update/<int:pk>/",views.NotificationUpdateAPIView.as_view()),
-    path("delete/<int:pk>/",views.NotificationDestroyAPIView.as_view()),
-    path("test/",views.NotificationTestAPIView.as_view()),
+    path("", include(router.urls)),
+    path("update/", include(router_update.urls))
 ]
