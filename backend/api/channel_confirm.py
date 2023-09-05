@@ -33,21 +33,20 @@ def send_inner(channel, thread, expiry, kind):
     try:
         channel.save()
 
+
         exp = expiry if expiry is not None else _get_validated_field(f'EMAIL_MAIL_TOKEN_LIFE', 'EMAIL_TOKEN_LIFE',
                                                                      default_type=int) + default_token_generator.now()
         token, expiry = default_token_generator.gen_token(channel, exp, kind=kind)
         
         print("___________________________----------------------_____________________")
         
-        print(channel.receiver_field)
-        
+        # print(channel.email_field)
         sender = _get_validated_field('EMAIL_FROM_ADDRESS')
         domain = _get_validated_field('CHANNEL_PAGE_DOMAIN')
         subject = _get_validated_field(f'EMAIL_CHANNEL_SUBJECT')
         mail_plain = _get_validated_field(f'EMAIL_CHANNEL_PLAIN')
         mail_html = _get_validated_field(f'EMAIL_CHANNEL_HTML')
-
-        print(channel.receiver_field)
+        # print(channel.email_field)
         
         args = (channel, kind, token, expiry, sender, domain, subject, mail_plain, mail_html)
         if thread:
@@ -84,9 +83,9 @@ def send_email_thread_2(channel, kind, token, expiry, sender, domain, subject, m
 
     html = render_to_string(mail_html, context)
     
-    print(channel.receiver_field)
+    print(channel.email_field)
     
-    msg = EmailMultiAlternatives(subject, text, sender, [channel.receiver_field])
+    msg = EmailMultiAlternatives(subject, text, sender, [channel.email_field])
 
     msg.attach_alternative(html, 'text/html')
     msg.send()

@@ -11,6 +11,7 @@ class NotificationChannel(models.Model):
         WEBHOOK = 'webhook', 'Webhook'
         SMS = 'sms', 'SMS'
         SLACK = 'slack', 'Slack'
+        TELEGRAM = 'telegram', 'Telegram'
         
     
     name = models.CharField(max_length=100,blank=True,unique=True) 
@@ -41,6 +42,10 @@ class SMSNotificatonChannel(NotificationChannel):
     
 class SlackNotificationChannel(NotificationChannel):
     user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='slack_notification_channels')
+    slack_username = models.CharField(max_length=100,default='Prometheus')
     incoming_webhook = models.URLField(validators=[URLValidator])
     slack_channel = models.CharField(max_length=100)
     
+class TelegramNotificationChannel(NotificationChannel):
+    user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='tele_notification_channels')
+    tele_webhook = models.URLField(validators=[URLValidator])

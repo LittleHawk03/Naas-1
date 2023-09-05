@@ -4,7 +4,7 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from users.models import Users
-from notification_channel.models import NotificationChannel
+from notification_channel.models import NotificationChannel, EmailNotificationChannel
 
 class EmailVerificationTokenGeneral():
     '''
@@ -16,11 +16,15 @@ class EmailVerificationTokenGeneral():
     def gen_token(self, obj, expiry,kind, **kwargs):
 
         exp = int(expiry.timestamp()) if isinstance(expiry, datetime) else expiry
+        print("gen token " + kind)
         if kind == 'MAIL':
+            
             payload = {'email' : obj.email, 'exp': exp}
         if kind == 'CHANNEL':
-            payload = {'email' : obj.receiver_field, 'exp': exp}
-            
+            print("1-----------------------1------------------1")
+            print(obj.id)
+            payload = {'email' : obj.email_field, 'exp': exp}
+        
         payload.update(**kwargs)
         return jwt.encode(payload, self.secret , algorithm='HS256'), datetime.fromtimestamp(exp)
         
@@ -37,13 +41,13 @@ class EmailVerificationTokenGeneral():
                 if kind == 'MAIL':
                     obj = Users.objects.filter(email=email)
                 if kind == 'CHANNEL':
-                    obj = NotificationChannel.objects.filter(receiver_field=email)
+                    obj = EmailNotificationChannel.objects.filter(email_field=email)
             else:
                 if kind == 'MAIL':
                     print(email)
                     obj = [Users.objects.get(email=email)]
                 if kind == 'CHANNEL':
-                    obj = [NotificationChannel.objects.get(receiver_field=email)]
+                    obj = [EmailNotificationChannel.objects.get(email_field=email)]
         except (ValueError, get_user_model().DoesNotExist, jwt.DecodeError, jwt.ExpiredSignatureError, jwt.ExpiredSignatureError):
             return False, None        
         

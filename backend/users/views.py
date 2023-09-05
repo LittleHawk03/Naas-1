@@ -20,9 +20,9 @@ class UserCreateApiView(ModelViewSet):
     def perform_create(self, serializer):
         user = serializer.save()
         
-        user_vertifi = Users.objects.get(id=user.id)
+        user_vertify = Users.objects.get(id=user.id)
         
-        send_email(user_vertifi)
+        send_email(user_vertify)
         return super().perform_create(serializer)
 
 class UsersListApiView(ModelViewSet):

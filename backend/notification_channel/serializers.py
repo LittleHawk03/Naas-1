@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import NotificationChannel, EmailNotificationChannel, WebhookNotificationChannel, SlackNotificationChannel, SMSNotificatonChannel 
+from .models import NotificationChannel, EmailNotificationChannel, WebhookNotificationChannel, SlackNotificationChannel, SMSNotificatonChannel, TelegramNotificationChannel
 
 
 class NotificationChannelSerializer(serializers.ModelSerializer):
@@ -39,6 +39,14 @@ class SlackNotificationChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = SlackNotificationChannel
         fields = ["id","name","notification_type","isSubscribed","incoming_webhook","slack_channel","user"]
+
+
+class TeleNotificationChannelSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TelegramNotificationChannel
+        fields = ["id","name","notification_type","isSubscribed","tele_webhook","user"]
+
 
 
 class NotifcationTest(serializers.ModelSerializer):
