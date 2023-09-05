@@ -1,6 +1,7 @@
 from django.db import models
-
 from users.models import Users
+from django.contrib.contenttypes.fields import GenericForeignKey,GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import EmailValidator, URLValidator
 
 # Create your models here.
@@ -19,6 +20,8 @@ class NotificationChannel(models.Model):
         choices=TypeChoice.choices,
         default=TypeChoice.EMAIL)
     isSubscribed = models.BooleanField(default=False)
+    
+    nc_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     
     def __str__(self) :
         return self.username
