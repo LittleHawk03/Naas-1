@@ -14,16 +14,14 @@ class NotificationChannel(models.Model):
         SLACK = 'slack', 'Slack'
         
     
-    name = models.CharField(max_length=100,blank=True,unique=True) 
+    # name = models.CharField(max_length=100,blank=True,unique=True) 
     notification_type = models.CharField(
         max_length=30,
         choices=TypeChoice.choices,
         default=TypeChoice.EMAIL)
     isSubscribed = models.BooleanField(default=False)
     
-    nc_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='nc_content_type')
-    nc_object_id = models.PositiveIntegerField()
-    nc_content_object =  GenericForeignKey('nc_content_type','nc_object_id')
+    
     
     def __str__(self) :
         return self.username
@@ -32,24 +30,20 @@ class NotificationChannel(models.Model):
     #     abstract = True
 
 
-class EmailNotificationChannel(NotificationChannel):
-    # user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='email_notification_channels')
-    user = GenericRelation(NotificationChannel, content_type_field='nc_content_type', object_id_field='nc_object_id')
+class EmailNotificationChannel(models.Model):
+    user = GenericRelation(Users,content_type_field='user_content_type',object_id_field='id')
     email_field = models.EmailField(validators=[EmailValidator])
     
-class WebhookNotificationChannel(NotificationChannel):
-    # user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='webhook_notification_channels')
-    user = GenericRelation(NotificationChannel, content_type_field='nc_content_type', object_id_field='nc_object_id')
+class WebhookNotificationChannel(models.Model):
+    user = GenericRelation(Users,content_type_field='user_content_type',object_id_field='id')
     webhook_url = models.URLField(validators=[URLValidator])
     
-class SMSNotificatonChannel(NotificationChannel):
-    # user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='sms_notification_channels')
-    user = GenericRelation(NotificationChannel, content_type_field='nc_content_type', object_id_field='nc_object_id')
+class SMSNotificatonChannel(models.Model):
+    user = GenericRelation(Users,content_type_field='user_content_type',object_id_field='id')
     sms_field = models.CharField(max_length=30,blank=True)
     
-class SlackNotificationChannel(NotificationChannel):
-    # user = models.ForeignKey(Users,on_delete=models.CASCADE,related_name='slack_notification_channels')
-    user = GenericRelation(NotificationChannel, content_type_field='nc_content_type', object_id_field='nc_object_id')
+class SlackNotificationChannel(models.Model):
+    user = GenericRelation(Users,content_type_field='user_content_type',object_id_field='id')
     incoming_webhook = models.URLField(validators=[URLValidator])
     slack_channel = models.CharField(max_length=100)
     
