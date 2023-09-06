@@ -30,9 +30,6 @@ class UsersListApiView(ModelViewSet):
     serializer_class = UserSerializer
     http_method_names = ['get',]
     
-    def list(self, request, *args, **kwargs):
-        return Response(self.serializer_class(self.queryset, many=True).data
-                        ,status=status.HTTP_200_OK)
         
 class UserRetrieveApiView(ModelViewSet):
     queryset = Users.objects.all()

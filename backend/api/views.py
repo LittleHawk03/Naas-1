@@ -26,9 +26,9 @@ def verify_channel(request: WSGIRequest, token):
     try:
         template = settings.EMAIL_CHANNEL_PAGE
         success, channel = verify_email_channel(token)
-        print(channel.receiver_field)
+        print(channel.email_field)
         return render(request, template, {'success': success, 'user': channel, 'request': request})
     except (AttributeError, TypeError):
-        raise NotAllFieldCompiled('EMAIL_MAIL_PAGE_TEMPLATE field not found')
+        raise NotAllFieldCompiled('EMAIL_CHANNEL_PAGE_TEMPLATE field not found')
     
 verify_channel_confirm = verify_channel

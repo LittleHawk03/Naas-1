@@ -24,8 +24,6 @@ class NotificationChannel(models.Model):
     def __str__(self) :
         return self.username
     
-    # class Meta:
-    #     abstract = True
 
 
 class EmailNotificationChannel(NotificationChannel):

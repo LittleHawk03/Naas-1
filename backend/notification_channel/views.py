@@ -25,9 +25,8 @@ class NotificationChannelCreateView(ModelViewSet):
         user_id = notification_channel.user.id
         notification_type = notification_channel.notification_type
         channel_id = notification_channel.id
-        
+        c.kv
         if notification_type == 'email':
-            print("email -------------------- email ------------- email")
             email_field = notification_channel.email_field
             c.kv.put(f"users/{ user_id }/alarms/email/{ channel_id }/receiver", email_field)
         elif notification_type == 'webhook':
@@ -150,8 +149,48 @@ class NotificationChannelDestroyView(ModelViewSet):
     queryset = NotificationChannel.objects.all()
     serializer_class = NotificationChannelSerializer
     
+    def delete_consul_kv(self, notification_channel):
+        consul_host = "116.103.226.93"
+        consul_port = 8500
+        c = consul.Consul(host=consul_host,port=consul_port)
+        user_id = notification_channel.user.id
+        channel_id = notification_channel.id
+        if notification_channel.notification_type == 'email':
+            c.kv.delete(f"users/{ user_id }/alarms/email/{ channel_id }/receiver")
+        elif notification_channel.notification_type == 'webhook':
+            c.kv.delete(f"users/{ user_id }/alarms/webhook/{ channel_id }/url")
+        elif notification_channel.notification_type == 'sms':
+            c.kv.delete(f"users/{ user_id }/alarms/sms/{ channel_id }/url")
+        elif notification_channel.notification_type == 'slack':
+            c.kv.delete(f"users/{ user_id }/alarms/slack/{ channel_id }/username")
+            c.kv.delete(f"users/{ user_id }/alarms/slack/{ channel_id }/channel")
+            c.kv.delete(f"users/{ user_id }/alarms/slack/{ channel_id }/api_url")
+        elif notification_channel.notification_type == 'telegram':
+            c.kv.delete(f"users/{ user_id }/alarms/telegram/{ channel_id }/tele_webhook")
+        else:
+            return Response({"detail": "Invalid notification type"}, status=status.HTTP_400_BAD_REQUEST)        
+        
+        
+    
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
+        if instance.notification_type == 'email':
+            object = EmailNotificationChannel.objects.get(id=instance.id)
+            self.delete_consul_kv(object)
+        elif instance.notification_type == 'webhook':
+            object = WebhookNotificationChannel.objects.get(id=instance.id)
+            self.delete_consul_kv(object)
+        elif instance.notification_type == 'sms':
+            object = SMSNotificatonChannel.objects.get(id=instance.id)
+            self.delete_consul_kv(object)
+        elif instance.notification_type == 'slack':
+            object = SlackNotificationChannel.objects.get(id=instance.id)
+            self.delete_consul_kv(object)
+        elif instance.notification_type == 'telegram':
+            object = TelegramNotificationChannel.objects.get(id=instance.id)
+            self.delete_consul_kv(object)
+        else:
+            return Response({"detail": "Invalid notification type"}, status=status.HTTP_400_BAD_REQUEST)        
         
         return super(NotificationChannelDestroyView, self).destroy(request, *args, **kwargs)
     
