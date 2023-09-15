@@ -6,3 +6,4 @@ django-cors-headers
 PyJWT
 deprecation==2.1.0
 python-consul
+psycopg2-binary

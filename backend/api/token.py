@@ -44,7 +44,6 @@ class EmailVerificationTokenGeneral():
                     obj = EmailNotificationChannel.objects.filter(email_field=email)
             else:
                 if kind == 'MAIL':
-                    print(email)
                     obj = [Users.objects.get(email=email)]
                 if kind == 'CHANNEL':
                     obj = [EmailNotificationChannel.objects.get(email_field=email)]

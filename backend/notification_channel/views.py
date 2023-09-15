@@ -33,7 +33,7 @@ class NotificationChannelCreateView(ModelViewSet):
             c.kv.put(f"users/{ user_id }/alarms/webhook/{ channel_id }/url", webhook_url)
         elif notification_type == 'sms':
             sms_field = notification_channel.sms_field
-            c.kv.put(f"users/{ user_id }/alarms/sms/{ channel_id }/url", sms_field)
+            c.kv.put(f"users/{ user_id }/alarms/sms/{ channel_id }/sms_field", sms_field)
         elif notification_type == 'slack':
             incoming_webhook = notification_channel.incoming_webhook
             slack_channel = notification_channel.slack_channel
@@ -131,7 +131,7 @@ class NotificationChannelRetrieveView(ModelViewSet):
                 serializer_class = SMSNotificationChannelSerializer(data)
             elif notification_type == 'slack':
                 data = SlackNotificationChannel.objects.get(id=object.id)
-                serializer_class = SlackNotificationChannel(data)
+                serializer_class = SlackNotificationChannelSerializer(data)
             elif notification_type == 'telegram':
                 data = TelegramNotificationChannel.objects.get(id=object.id)
                 serializer_class = TeleNotificationChannelSerializer(data)

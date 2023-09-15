@@ -1,0 +1,35 @@
+version: "3.0"
+ 
+
+services:
+  
+  postgres_db:
+    image: postgres:15.4-alpine3.18
+    container_name: db
+    restart: unless-stopped	
+    environment:
+      - POSTGRES_DB=notification_channel
+      - POSTGRES_PASSWORD=123456a@
+      - POSTGRES_USER=notification_user
+    ports:
+      - 5432:5432
+    network_mode: host
+
+  api: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    command: >
+        sh -c "python manage.py makemigrations 
+        && python manage.py migrate
+        && python manage.py runserver 0.0.0.0:8000"
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres_db
+    network_mode: host
+  
+  
+    

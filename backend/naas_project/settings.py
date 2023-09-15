@@ -84,10 +84,22 @@ WSGI_APPLICATION = 'naas_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'notification_channel',
+        'USER': 'notification_user',
+        'PASSWORD': '123456a@',
+        'HOST': '0.0.0.0',
+        'PORT': '5432',
     }
 }
 
@@ -163,13 +175,15 @@ EMAIL_CHANNEL_PLAIN = 'plainmail_channel.txt'
 EMAIL_CHANNEL_PAGE = 'confirm_channel.html'
 
 
+EMAIL_MULTI_USER = True
+
 # cbpamuevasnbbnrb
 # EMAIL_PASSWORD = 'mngijizoxlwdatfw'
 EMAIL_MAIL_TOKEN_LIFE = 60 * 60
 EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
 
-EMAIL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/email/'
-CHANNEL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/channel/'
+EMAIL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/email/'
+CHANNEL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/channel/'
 
 
 
