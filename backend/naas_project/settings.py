@@ -29,6 +29,9 @@ EMAIL_HOST_USER = 'goldf55f@gmail.com'
 EMAIL_HOST_PASSWORD = 'mngijizoxlwdatfw'  # os.environ['password_key'] suggested
 EMAIL_USE_TLS = True
 
+TWILIO_SID="AC4fdc644445e0afcf1fc3312e2af853af"
+TWILIO_TOKEN="26291d7df2b8c6698b255a3f09cc3795"
+TWILIO_SENDER="+12512377967"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -84,24 +87,24 @@ WSGI_APPLICATION = 'naas_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'notification_channel',
-        'USER': 'notification_user',
-        'PASSWORD': '123456a@',
-        'HOST': '0.0.0.0',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'notification_channel',
+#         'USER': 'notification_user',
+#         'PASSWORD': '123456a@',
+#         'HOST': '0.0.0.0',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

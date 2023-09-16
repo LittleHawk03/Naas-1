@@ -36,7 +36,7 @@ class WebhookNotificationChannel(NotificationChannel):
     webhook_url = models.URLField(validators=[URLValidator])
     
 class SMSNotificatonChannel(NotificationChannel):
-    sms_field = models.CharField(max_length=30,blank=True)
+    sms_field = models.CharField(max_length=30,blank=True,unique=True)
     
 class SlackNotificationChannel(NotificationChannel):
     slack_username = models.CharField(max_length=100,default='Prometheus')

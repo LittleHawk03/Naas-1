@@ -11,6 +11,7 @@ from .models import NotificationChannel, SMSNotificatonChannel,EmailNotification
 from .serializers import NotificationChannelSerializer, NotifcationTest 
 from .serializers import EmailNotificationChannelSerializer, WebhookNotificationChannelSerializer, SMSNotificationChannelSerializer,SlackNotificationChannelSerializer, TeleNotificationChannelSerializer
 from api.channel_confirm import send_channel
+from api.utils import send_vertification_sms
 
 
 
@@ -70,11 +71,14 @@ class NotificationChannelCreateView(ModelViewSet):
         serializer = serializer_class(data=self.request.data)
         if serializer.is_valid():
             notification_channel = serializer.save()
-            self.put_consul_kv(notification_channel)
+            # self.put_consul_kv(notification_channel)
             
             if notification_type == 'email':
                 vertify_notification_channel = EmailNotificationChannel.objects.get(id=notification_channel.id)
                 send_channel(vertify_notification_channel)
+            elif notification_type == 'sms':
+                vertify_notification_channel = SMSNotificatonChannel.objects.get(id=notification_channel.id)
+                send_vertification_sms(vertify_notification_channel)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
             
         return Response({"some thing be wrong"}, status=status.HTTP_400_BAD_REQUEST)
