@@ -20,32 +20,33 @@ otp_settings = {
     "VALIDATION_ATTEMPTS": 3,
     "SUBJECT": "OTP for Verification",
     "COOLING_PERIOD": 3,
+    "INTERVAL_TIME" : 125,
 }
 
 def send_vertification_sms(notification_channel):
     phone_number = notification_channel.sms_field
     otp_obj = generate_otp(phonenumber=phone_number)
-    print("step-sms-1")
-    send_otp(phonenumber=phone_number,otpobj=otp_obj)
+    print("+84" + phone_number[1:])
+    send_otp(phonenumber= "+84" + phone_number[1:],otpobj=otp_obj)
 
 def datetime_passed_now(source: datetime.datetime) -> bool:
-    """
-    Compares provided datetime with current time on the basis of Django
-    settings. Checks source is in future or in past. False if it's in future.
-    Parameters
-    ----------
-    source: datetime object than may or may not be naive
-
-    Returns
-    -------
-    bool
-
-    Author: Himanshu Shankar (https://himanshus.com)
-    """
+  
     if source.tzinfo is not None and source.tzinfo.utcoffset(source) is not None:
         return source <= datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     else:
         return source <= datetime.datetime.now()
+    
+def datetime_timeout_now(source : datetime.datetime) -> bool:
+
+    """_summary_
+        compares provied datetime with current time for checking otp is avlidate
+    """
+    
+    if source.tzinfo is not None and source.tzinfo.utcoffset(source) is not None:
+        return source >= datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    else:
+        return source >= datetime.datetime.now()
+    
 
 def generate_otp(phonenumber: str):
     
@@ -55,7 +56,7 @@ def generate_otp(phonenumber: str):
     
     secret_key = pyotp.random_base32()
     
-    random_otp = pyotp.TOTP(secret_key)
+    random_otp = pyotp.TOTP(secret_key, interval=otp_settings['INTERVAL_TIME'])
     
     random_number: str = random_otp.now()
     
@@ -76,9 +77,7 @@ def generate_otp(phonenumber: str):
     otp_object.otp = random_number
     otp_object.is_validated = False
     otp_object.validate_attempt = otp_settings["VALIDATION_ATTEMPTS"]
-    
-    otp_object.validate_attempt = otp_settings["VALIDATION_ATTEMPTS"]
-
+    otp_object.timeout = datetime.datetime.now() + datetime.timedelta(minutes=2)
     otp_object.reactive_at = timezone.now() - datetime.timedelta(minutes=1)
     otp_object.save()
     return otp_object
@@ -108,7 +107,7 @@ def send_otp(phonenumber: str, otpobj: OTPValidation, recip: str = None) -> Dict
         )
 
     message = (
-        f"OTP for verifying : {phonenumber} is {otp}."
+        f"OTP for verifying: {phonenumber} is {otp}."
         f"  Don't share this with anyone!"
     )
 
@@ -143,7 +142,7 @@ def validate_otp(phone_number: str, otp: int) -> bool:
     # Decrement validate_attempt
     otp_object.validate_attempt -= 1
 
-    if str(otp_object.otp) == str(otp):
+    if str(otp_object.otp) == str(otp) and datetime_timeout_now(otp_object.timeout):
         # match otp
         otp_object.is_validated = True
         otp_object.save()
@@ -176,7 +175,7 @@ def send_message(message, phone_number, recip = None):
     
     
     message_respone = twilio_client.messages.create(body=message,to=phone_number,from_=sender)
-    
+    print("send message done")
     print (message_respone)
     
     return message_respone

@@ -93,38 +93,6 @@ def send_email_thread_2(user, kind, token, expiry, sender, domain, subject, mail
     print("step2-done")
 
 
-def send_email_thread_3(user, kind, token, expiry, sender, domain, subject, mail_plain, mail_html):
-    domain += '/' if not domain.endswith('/') else ''
-
-
-    context = {'token': token, 'expiry': expiry, 'user': user,'link':domain}
-
-   
-    context['link'] = domain + token
-    
- 
-    print(context['link'])
-   
-    subject = Template(subject).render(Context(context))
-
-    text = render_to_string(mail_plain, context)
-
-    html = render_to_string(mail_html, context)
-    
-    print(user.email)
-    
-    
-    try:
-            send_mail(subject, text, sender, [user.email])
-    except BadHeaderError:
-            return HttpResponse("Invalid header found.")
-    # msg = EmailMultiAlternatives(subject, text, sender, [user.email])
-
-    # msg.attach_alternative(html, 'text/html')
-    # msg.send()
-    print("step2-done")
-
-
 def _get_validated_field(field, fallback=None, default_type=None):
     if default_type is None:
         default_type = str

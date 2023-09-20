@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from notification_channel.consulkv import put_consul_kv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,7 @@ EMAIL_HOST_PASSWORD = 'mngijizoxlwdatfw'  # os.environ['password_key'] suggested
 EMAIL_USE_TLS = True
 
 TWILIO_SID="AC4fdc644445e0afcf1fc3312e2af853af"
-TWILIO_TOKEN="26291d7df2b8c6698b255a3f09cc3795"
+TWILIO_TOKEN="986650514f3bca2f15a6fe1bef3b0923"
 TWILIO_SENDER="+12512377967"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -151,9 +152,11 @@ def verified(user):
     print("step-change-1")
     user.active = True
     
+    
 def verified_channel(channel):
     print("step-change-2")
     channel.isSubscribed = True
+    put_consul_kv(channel)
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -182,11 +185,11 @@ EMAIL_MULTI_USER = True
 
 # cbpamuevasnbbnrb
 # EMAIL_PASSWORD = 'mngijizoxlwdatfw'
-EMAIL_MAIL_TOKEN_LIFE = 60 * 60
-EMAIL_CHANNEL_TOKEN_LIFE = 60 * 80
+EMAIL_MAIL_TOKEN_LIFE = 60 * 2
+EMAIL_CHANNEL_TOKEN_LIFE = 60 * 2
 
-EMAIL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/email/'
-CHANNEL_PAGE_DOMAIN = 'http://116.103.226.93:8000/api/comfirm/channel/'
+EMAIL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/email/'
+CHANNEL_PAGE_DOMAIN = 'http://0.0.0.0:8000/api/comfirm/channel/'
 
 
 

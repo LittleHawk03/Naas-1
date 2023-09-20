@@ -16,6 +16,7 @@ from .utils import send_message
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
+from notification_channel.consulkv import put_consul_kv
 
 @verify_email_view
 def verify(request: WSGIRequest, token):
@@ -58,6 +59,8 @@ class OTPVerificationView(APIView):
         notificationChannel = serializer.validated_data.get("notificationchannel")
         
         # otp_obj_phone = generate_otp(phonenumber=phone_number)
+        # print(otp_obj_phone.otp)
+        # test = validate_otp(phone_number=phone_number,otp=otp_obj_phone.otp)
         # message_send = send_message(message="your OTP: " + otp_obj_phone.otp,phone_number="+84349354228")
         
         
@@ -66,6 +69,7 @@ class OTPVerificationView(APIView):
                 channel = SMSNotificatonChannel.objects.get(sms_field=phone_number)
                 channel.isSubscribed = True
                 channel.save()
+                put_consul_kv(channel)
                 
                 res = {
                     "message" : "the notification channel is subscribed"
