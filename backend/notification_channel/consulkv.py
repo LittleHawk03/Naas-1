@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 def put_consul_kv(notification_channel): 
-    consul_host = "116.103.226.93"
+    consul_host = "0.0.0.0"
     consul_port = 8500
     c = consul.Consul(host=consul_host,port=consul_port)
     user_id = notification_channel.user.id
@@ -33,7 +33,7 @@ def put_consul_kv(notification_channel):
     
 
 def delete_consul_kv(notification_channel):
-    consul_host = "116.103.226.93"
+    consul_host = "0.0.0.0"
     consul_port = 8500
     c = consul.Consul(host=consul_host,port=consul_port)
     user_id = notification_channel.user.id
@@ -55,7 +55,7 @@ def delete_consul_kv(notification_channel):
     
     
 def update_consul_kv(notification_channel, object_request):
-        consul_host = "116.103.226.93"
+        consul_host = "0.0.0.0"
         consul_port = 8500
         c = consul.Consul(host=consul_host,port=consul_port)
         user_id = notification_channel.user.id

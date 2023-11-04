@@ -61,7 +61,7 @@ class OTPVerificationView(APIView):
         # otp_obj_phone = generate_otp(phonenumber=phone_number)
         # print(otp_obj_phone.otp)
         # test = validate_otp(phone_number=phone_number,otp=otp_obj_phone.otp)
-        # message_send = send_message(message="your OTP: " + otp_obj_phone.otp,phone_number="+84349354228")
+        # message_send = send_message(message="Huyen Ngo Yeu Duc nha",phone_number="+84399874576")
         
         
         if verify_otp:
